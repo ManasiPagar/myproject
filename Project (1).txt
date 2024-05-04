@@ -1,0 +1,154 @@
+// ProductController.java
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+    @Autowired
+    private ProductService productService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Product addProduct(@RequestBody Product product) {
+        return productService.addProduct(product);
+    }
+
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable String id) {
+        return productService.getProductById(id);
+    }
+
+    @GetMapping
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable String id, @RequestBody Product product) {
+        return productService.updateProduct(id, product);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable String id) {
+        productService.deleteProduct(id);
+    }
+
+    // Implement search functionality endpoint
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam(required = false) String name,
+                                        @RequestParam(required = false) List<String> categories,
+                                        @RequestParam(required = false) String attributeName,
+                                        @RequestParam(required = false) String attributeValue) {
+        return productService.searchProducts(name, categories, attributeName, attributeValue);
+    }
+
+    // Implement rating endpoint
+    @PostMapping("/{id}/rating")
+    public Product rateProduct(@PathVariable String id, @RequestBody Rating rating) {
+        return productService.rateProduct(id, rating);
+    }
+}
+
+
+
+
+
+
+
+// ProductService.java
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+public class ProductService {
+    @Autowired
+    private ProductRepository productRepository;
+
+    public Product addProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public Product getProductById(String id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product updateProduct(String id, Product product) {
+        // Logic to update product
+        // You may need to implement error handling if the product with the given id doesn't exist
+        // You can use productRepository.save(product) for updating
+    }
+
+    public void deleteProduct(String id) {
+                productRepository.deleteById(id)     }
+
+    public List<Product> searchProducts(String name, List<String> categories, String attributeName, String attributeValue) {
+         ProductService.java
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+
+@Service
+public class ProductService {
+    @Autowired
+    private ProductRepository productRepository;
+
+    public Product addProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public Product getProductById(String id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product updateProduct(String id, Product product) {
+              productRepository.save(product)     }
+
+    public void deleteProduct(String id) {
+             productRepository.deleteById(id) 
+    }
+
+    public List<Product> searchProducts(String name, List<String> categories, String attributeName, String attributeValue) {
+            }
+
+    public Product rateProduct(String id, Rating rating) {
+         productRepository.save(product)
+    }
+}    }
+
+    public Product rateProduct(String id, Rating rating) {
+          productRepository.save(product)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+// ProductRepository.java 
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
+public interface ProductRepository extends MongoRepository<Product, String> {
+        List<Product> findByNameContainingIgnoreCase(String name);
+}
